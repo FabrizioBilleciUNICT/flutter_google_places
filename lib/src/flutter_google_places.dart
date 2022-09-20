@@ -273,12 +273,11 @@ class AppBarPlacesAutoCompleteTextField extends StatefulWidget {
       : super(key: key);
 
   @override
-  _AppBarPlacesAutoCompleteTextFieldState createState() =>
+  State<AppBarPlacesAutoCompleteTextField> createState() =>
       _AppBarPlacesAutoCompleteTextFieldState();
 }
 
-class _AppBarPlacesAutoCompleteTextFieldState
-    extends State<AppBarPlacesAutoCompleteTextField> {
+class _AppBarPlacesAutoCompleteTextFieldState extends State<AppBarPlacesAutoCompleteTextField> {
   @override
   Widget build(BuildContext context) {
     final state = PlacesAutocompleteWidget.of(context)!;
