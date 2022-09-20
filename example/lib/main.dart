@@ -148,6 +148,26 @@ Future<void> displayPrediction(Prediction? p, BuildContext context) async {
   }
 }
 
+class CustomPlacesAutoCompleteTextField extends AppBarPlacesAutoCompleteTextField {
+  final bool a;
+  const CustomPlacesAutoCompleteTextField(this.a,
+      {Key? key})
+      : super(key: key);
+
+  @override
+  _CustomPlacesAutoCompleteTextField createState() =>
+      _CustomPlacesAutoCompleteTextField();
+}
+
+class _CustomPlacesAutoCompleteTextField extends State<CustomPlacesAutoCompleteTextField> {
+  @override
+  Widget build(BuildContext context) {
+    final state = PlacesAutocompleteWidget.of(context)!;
+    widget.a;
+    return Container();
+  }
+}
+
 // custom scaffold that handle search
 // basically your widget need to extends [GooglePlacesAutocompleteWidget]
 // and your state [GooglePlacesAutocompleteState]
