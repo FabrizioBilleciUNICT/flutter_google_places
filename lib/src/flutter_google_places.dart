@@ -143,14 +143,14 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
           ? widget.overlayBorderRadius!.bottomRight
           : const Radius.circular(2);
 
-      if (_searching) {
+      if (searching) {
         body = Stack(
           children: <Widget>[_Loader()],
           alignment: FractionalOffset.bottomCenter,
         );
-      } else if (_queryTextController!.text.isEmpty ||
-          _response == null ||
-          _response!.predictions.isEmpty) {
+      } else if (queryTextController!.text.isEmpty ||
+          response == null ||
+          response!.predictions.isEmpty) {
         body = Material(
           color: theme.dialogBackgroundColor,
           child: widget.logo ?? const PoweredByGoogleImage(),
@@ -168,7 +168,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
             ),
             color: theme.dialogBackgroundColor,
             child: ListBody(
-              children: _response!.predictions
+              children: response!.predictions
                   .map(
                     (p) => PredictionTile(
                       prediction: p,
@@ -201,7 +201,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
       : const Icon(Icons.arrow_back);
 
   Widget _textField(BuildContext context) => TextField(
-        controller: _queryTextController,
+        controller: queryTextController,
         autofocus: true,
         style: TextStyle(
             color: Theme.of(context).brightness == Brightness.light
@@ -247,18 +247,18 @@ class _PlacesAutocompleteResult extends State<PlacesAutocompleteResult> {
   Widget build(BuildContext context) {
     final state = PlacesAutocompleteWidget.of(context)!;
 
-    if (state._queryTextController!.text.isEmpty ||
-        state._response == null ||
-        state._response!.predictions.isEmpty) {
+    if (state.queryTextController!.text.isEmpty ||
+        state.response == null ||
+        state.response!.predictions.isEmpty) {
       final children = <Widget>[];
-      if (state._searching) {
+      if (state.searching) {
         children.add(_Loader());
       }
       children.add(widget.logo ?? const PoweredByGoogleImage());
       return Stack(children: children);
     }
     return PredictionsListView(
-      predictions: state._response!.predictions,
+      predictions: state.response!.predictions,
       onTap: widget.onTap,
     );
   }
@@ -286,7 +286,7 @@ class _AppBarPlacesAutoCompleteTextFieldState extends State<AppBarPlacesAutoComp
         alignment: Alignment.topLeft,
         margin: const EdgeInsets.only(top: 4.0),
         child: TextField(
-          controller: state._queryTextController,
+          controller: state.queryTextController,
           autofocus: true,
           style: widget.textStyle ?? _defaultStyle(),
           decoration:
@@ -388,11 +388,11 @@ class PredictionTile extends StatelessWidget {
 enum Mode { overlay, fullscreen }
 
 abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
-  TextEditingController? _queryTextController;
-  PlacesAutocompleteResponse? _response;
-  GoogleMapsPlaces? _places;
-  late bool _searching;
-  Timer? _debounce;
+  TextEditingController? queryTextController;
+  PlacesAutocompleteResponse? response;
+  GoogleMapsPlaces? places;
+  late bool searching;
+  Timer? debounce;
 
   final _queryBehavior = BehaviorSubject<String>.seeded('');
 
@@ -400,22 +400,22 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   void initState() {
     super.initState();
 
-    _queryTextController = TextEditingController(text: widget.startText);
-    _queryTextController!.selection = TextSelection(
+    queryTextController = TextEditingController(text: widget.startText);
+    queryTextController!.selection = TextSelection(
       baseOffset: 0,
       extentOffset: widget.startText?.length ?? 0,
     );
 
     _initPlaces();
-    _searching = false;
+    searching = false;
 
-    _queryTextController!.addListener(_onQueryChange);
+    queryTextController!.addListener(_onQueryChange);
 
     _queryBehavior.stream.listen(doSearch);
   }
 
   Future<void> _initPlaces() async {
-    _places = GoogleMapsPlaces(
+    places = GoogleMapsPlaces(
       apiKey: widget.apiKey,
       baseUrl: widget.proxyBaseUrl,
       httpClient: widget.httpClient,
@@ -424,12 +424,12 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   }
 
   Future<void> doSearch(String value) async {
-    if (mounted && value.isNotEmpty && _places != null) {
+    if (mounted && value.isNotEmpty && places != null) {
       setState(() {
-        _searching = true;
+        searching = true;
       });
 
-      final res = await _places!.autocomplete(
+      final res = await places!.autocomplete(
         value,
         offset: widget.offset,
         location: widget.location,
@@ -454,10 +454,10 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   }
 
   void _onQueryChange() {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(Duration(milliseconds: widget.debounce), () {
+    if (debounce?.isActive ?? false) debounce!.cancel();
+    debounce = Timer(Duration(milliseconds: widget.debounce), () {
       if (!_queryBehavior.isClosed) {
-        _queryBehavior.add(_queryTextController!.text);
+        _queryBehavior.add(queryTextController!.text);
       }
     });
   }
@@ -466,10 +466,10 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
   void dispose() {
     super.dispose();
 
-    _places?.dispose();
-    _debounce?.cancel();
+    places?.dispose();
+    debounce?.cancel();
     _queryBehavior.close();
-    _queryTextController!.removeListener(_onQueryChange);
+    queryTextController!.removeListener(_onQueryChange);
   }
 
   @mustCallSuper
@@ -480,8 +480,8 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
       widget.onError!(res);
     }
     setState(() {
-      _response = null;
-      _searching = false;
+      response = null;
+      searching = false;
     });
   }
 
@@ -490,8 +490,8 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
     if (!mounted) return;
 
     setState(() {
-      _response = res;
-      _searching = false;
+      response = res;
+      searching = false;
     });
   }
 }
