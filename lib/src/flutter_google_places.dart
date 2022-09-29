@@ -268,7 +268,7 @@ class _PlacesAutocompleteResult extends State<PlacesAutocompleteResult> {
         children.add(_Loader());
       }
       children.add(widget.logo ?? const PoweredByGoogleImage());
-      return Stack(children: children);
+      return ListView(children: children);
     }
     return PredictionsListView(
       predictions: state.response!.predictions,
