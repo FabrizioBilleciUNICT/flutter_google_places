@@ -43,6 +43,17 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   /// or custom configuration
   final BaseClient? httpClient;
 
+  /// If true the [body] and the scaffold's floating widgets should size
+  /// themselves to avoid the onscreen keyboard whose height is defined by the
+  /// ambient [MediaQuery]'s [MediaQueryData.viewInsets] `bottom` property.
+  ///
+  /// For example, if there is an onscreen keyboard displayed above the
+  /// scaffold, the body can be resized to avoid overlapping the keyboard, which
+  /// prevents widgets inside the body from being obscured by the keyboard.
+  ///
+  /// Defaults to true.
+  final bool? resizeToAvoidBottomInset;
+
   const PlacesAutocompleteWidget({
     required this.apiKey,
     this.mode = Mode.fullscreen,
@@ -67,6 +78,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
     this.decoration,
     this.textStyle,
     this.themeData,
+    this.resizeToAvoidBottomInset
   }) : super(key: key);
 
   @override
@@ -85,6 +97,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
       return Theme(
         data: theme,
         child: Scaffold(
+          resizeToAvoidBottomInset: widget.resizeToAvoidBottomInset,
             appBar: AppBar(
               title: AppBarPlacesAutoCompleteTextField(
                 textDecoration: widget.decoration,
@@ -520,6 +533,7 @@ class PlacesAutocomplete {
     String startText = "",
     TextStyle? textStyle,
     ThemeData? themeData,
+    bool? resizeToAvoidBottomInset
   }) {
     builder(BuildContext ctx) => PlacesAutocompleteWidget(
           apiKey: apiKey,
@@ -543,6 +557,7 @@ class PlacesAutocomplete {
           decoration: decoration,
           textStyle: textStyle,
           themeData: themeData,
+          resizeToAvoidBottomInset: resizeToAvoidBottomInset
         );
 
     if (mode == Mode.overlay) {
