@@ -113,6 +113,7 @@ class _MyAppState extends State<MyApp> {
       apiKey: kGoogleApiKey,
       onError: onError,
       mode: _mode!,
+      resizeToAvoidBottomInset: false,
       language: "fr",
       decoration: InputDecoration(
         hintText: 'Search',
@@ -179,6 +180,7 @@ class CustomSearchScaffold extends PlacesAutocompleteWidget {
           sessionToken: Uuid().generateV4(),
           language: "en",
           components: [Component(Component.country, "uk")],
+          resizeToAvoidBottomInset: false,
         );
 
   @override

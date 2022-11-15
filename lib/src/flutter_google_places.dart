@@ -14,6 +14,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   final String hint;
   final BorderRadius? overlayBorderRadius;
   final Location? location;
+  final Location? origin;
   final num? offset;
   final num? radius;
   final String? language;
@@ -61,6 +62,7 @@ class PlacesAutocompleteWidget extends StatefulWidget {
     this.overlayBorderRadius,
     this.offset,
     this.location,
+    this.origin,
     this.radius,
     this.language,
     this.sessionToken,
@@ -445,6 +447,7 @@ abstract class PlacesAutocompleteState extends State<PlacesAutocompleteWidget> {
       final res = await places!.autocomplete(
         value,
         offset: widget.offset,
+        origin: widget.origin,
         location: widget.location,
         radius: widget.radius,
         language: widget.language,
