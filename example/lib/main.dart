@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_webservice/places.dart';
 
-const kGoogleApiKey = "API_KEY";
+const kGoogleApiKey = "AIzaSyAFKuv3ovJ1WoaV-RJYL99LdPhu1wzo-7c";
 
 main() {
   runApp(const RoutesWidget());
@@ -32,7 +32,7 @@ class RoutesWidget extends StatelessWidget {
   Widget build(BuildContext context) => MaterialApp(
         title: "My App",
         darkTheme: customTheme,
-        themeMode: ThemeMode.dark,
+        themeMode: ThemeMode.light,
         routes: {
           "/": (_) => const MyApp(),
           "/search": (_) => CustomSearchScaffold(),
@@ -178,8 +178,12 @@ class CustomSearchScaffold extends PlacesAutocompleteWidget {
           key: key,
           apiKey: kGoogleApiKey,
           sessionToken: Uuid().generateV4(),
-          language: "en",
-          components: [Component(Component.country, "uk")],
+          language: "it",
+          //origin: Location(lat: 37.5078772, lng: 15.0830304),
+          location: Location(lat: 37.5078772, lng: 15.0830304),
+          radius: 300,
+          //strictbounds: true,
+          components: [Component(Component.country, "it")],
           resizeToAvoidBottomInset: false,
         );
 
@@ -192,6 +196,7 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
   Widget build(BuildContext context) {
     final appBar = AppBar(title: const AppBarPlacesAutoCompleteTextField());
     final body = PlacesAutocompleteResult(
+      color: Colors.black,
       onTap: (p) {
         displayPrediction(p, context);
       },

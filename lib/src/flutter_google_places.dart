@@ -55,11 +55,15 @@ class PlacesAutocompleteWidget extends StatefulWidget {
   /// Defaults to true.
   final bool? resizeToAvoidBottomInset;
 
+  /// Text color
+  final Color color;
+
   const PlacesAutocompleteWidget({
     required this.apiKey,
     this.mode = Mode.fullscreen,
     this.hint = "Search",
     this.overlayBorderRadius,
+    this.color = Colors.black,
     this.offset,
     this.location,
     this.origin,
@@ -107,6 +111,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
               ),
             ),
             body: PlacesAutocompleteResult(
+              color: widget.color,
               onTap: Navigator.of(context).pop,
               logo: widget.logo,
             )),
@@ -186,6 +191,7 @@ class _PlacesAutocompleteOverlayState extends PlacesAutocompleteState {
               children: response!.predictions
                   .map(
                     (p) => PredictionTile(
+                      color: widget.color,
                       prediction: p,
                       onTap: Navigator.of(context).pop,
                     ),
@@ -249,8 +255,9 @@ class _Loader extends StatelessWidget {
 class PlacesAutocompleteResult extends StatefulWidget {
   final ValueChanged<Prediction>? onTap;
   final Widget? logo;
+  final Color color;
 
-  const PlacesAutocompleteResult({Key? key, this.onTap, this.logo})
+  const PlacesAutocompleteResult({Key? key, this.onTap, this.logo, required this.color})
       : super(key: key);
 
   @override
@@ -275,6 +282,7 @@ class _PlacesAutocompleteResult extends State<PlacesAutocompleteResult> {
     return PredictionsListView(
       predictions: state.response!.predictions,
       onTap: widget.onTap,
+      color: widget.color
     );
   }
 }
@@ -362,15 +370,16 @@ class PoweredByGoogleImage extends StatelessWidget {
 class PredictionsListView extends StatelessWidget {
   final List<Prediction> predictions;
   final ValueChanged<Prediction>? onTap;
+  final Color color;
 
-  const PredictionsListView({Key? key, required this.predictions, this.onTap})
+  const PredictionsListView({Key? key, required this.predictions, this.onTap, required this.color})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: predictions
-          .map((Prediction p) => PredictionTile(prediction: p, onTap: onTap))
+          .map((Prediction p) => PredictionTile(prediction: p, onTap: onTap, color: color))
           .toList(),
     );
   }
@@ -378,18 +387,19 @@ class PredictionsListView extends StatelessWidget {
 
 class PredictionTile extends StatelessWidget {
   final Prediction prediction;
+  final Color color;
   final ValueChanged<Prediction>? onTap;
 
-  const PredictionTile({Key? key, required this.prediction, this.onTap})
+  const PredictionTile({Key? key, required this.prediction, this.onTap, required this.color})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: const Icon(Icons.location_on),
+      leading: Icon(Icons.location_on, color: color),
       title: Text(
         prediction.description!,
-        style: Theme.of(context).textTheme.bodyText2,
+        style: TextStyle(color: color),
       ),
       onTap: () {
         if (onTap != null) {
