@@ -277,7 +277,7 @@ class _PlacesAutocompleteResult extends State<PlacesAutocompleteResult> {
         children.add(_Loader());
       }
       children.add(widget.logo ?? const PoweredByGoogleImage());
-      return ListView(children: children);
+      return ListView(padding: EdgeInsets.zero, children: children);
     }
     return PredictionsListView(
       predictions: state.response!.predictions,
@@ -378,6 +378,7 @@ class PredictionsListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(
+      padding: EdgeInsets.zero,
       children: predictions
           .map((Prediction p) => PredictionTile(prediction: p, onTap: onTap, color: color))
           .toList(),
