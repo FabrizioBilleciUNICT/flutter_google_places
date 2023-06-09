@@ -196,10 +196,7 @@ class _CustomSearchScaffoldState extends PlacesAutocompleteState {
   Widget build(BuildContext context) {
     final appBar = AppBar(title: const AppBarPlacesAutoCompleteTextField());
     final body = PlacesAutocompleteResult(
-      color: Colors.black,
-      onTap: (p) {
-        displayPrediction(p, context);
-      },
+      builder: (context, p) => PredictionTile(prediction: p, color: Colors.black, onTap: () => displayPrediction(p, context)),
       logo: Row(
         children: const [FlutterLogo()],
         mainAxisAlignment: MainAxisAlignment.center,
